@@ -1,0 +1,20 @@
+{
+    "name": "andrew13/laravel4-file-upload",
+    "description": "",
+    "authors": [
+        {
+            "name": "",
+            "email": ""
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0",
+        "illuminate/support": "4.0.x"
+    },
+    "autoload": {
+        "psr-0": {
+            "Andrew13\\Laravel4FileUpload": "src/"
+        }
+    },
+    "minimum-stability": "dev"
+}
