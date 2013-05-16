@@ -11,6 +11,16 @@ class Laravel4FileUploadServiceProvider extends ServiceProvider {
 	 */
 	protected $defer = false;
 
+    /**
+     * Bootstrap the application events.
+     *
+     * @return void
+     */
+    public function boot()
+    {
+        $this->package('andrew13\laravel-4-file-upload');
+    }
+
 	/**
 	 * Register the service provider.
 	 *
@@ -18,7 +28,10 @@ class Laravel4FileUploadServiceProvider extends ServiceProvider {
 	 */
 	public function register()
 	{
-		//
+        $this->app->bind('l4fu', function($app)
+        {
+            return new Laravel4FileUpload($app);
+        });
 	}
 
 	/**
@@ -28,7 +41,7 @@ class Laravel4FileUploadServiceProvider extends ServiceProvider {
 	 */
 	public function provides()
 	{
-		return array();
+		return array('l4fu');
 	}
 
 }

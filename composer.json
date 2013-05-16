@@ -1,6 +1,7 @@
 {
     "name": "andrew13/laravel-4-file-upload",
     "description": "Laravel 4 implementation of blueimp/jQuery-File-Upload",
+    "keywords": ["laravel","illuminate","file","uploads"],
     "license": "MIT",
     "authors": [
         {
