@@ -1,10 +1,10 @@
 {
-    "name": "andrew13/laravel4-file-upload",
-    "description": "",
+    "name": "andrew13/laravel-4-file-upload",
+    "description": "Laravel 4 implementation of blueimp/jQuery-File-Upload",
+    "license": "MIT",
     "authors": [
         {
-            "name": "",
-            "email": ""
+            "name": "Andrew Elkins"
         }
     ],
     "require": {
