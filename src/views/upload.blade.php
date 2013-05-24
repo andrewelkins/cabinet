@@ -1,17 +1,15 @@
 <!-- Bootstrap CSS Toolkit styles -->
-<link rel="stylesheet" href="{{asset('assets/packages/andrew13/cabinet/css/blueimp/bootstrap.min.css')}}">
+<link rel="stylesheet" href="{{asset('packages/andrew13/cabinet/css/blueimp/bootstrap.min.css')}}">
 <!-- Generic page styles -->
-<link rel="stylesheet" href="css/style.css">
-<!-- Bootstrap styles for responsive website layout, supporting different screen sizes -->
-<link rel="stylesheet" href="{{asset('assets/packages/andrew13/cabinet/css/blueimp/bootstrap-responsive.min.css')}}">
+<link rel="stylesheet" href="{{asset('packages/andrew13/cabinet/css/style.css')}}">
 <!-- Bootstrap CSS fixes for IE6 -->
-<!--[if lt IE 7]><link rel="stylesheet" href="{{asset('assets/packages/andrew13/cabinet/css/blueimp/bootstrap-ie6.min.css')}}"><![endif]-->
+<!--[if lt IE 7]><rlink rel="stylesheet" href="{{asset('packages/andrew13/cabinet/css/blueimp/bootstrap-ie6.min.css')}}"><![endif]-->
 <!-- Bootstrap Image Gallery styles -->
 <link rel="stylesheet" href="http://blueimp.github.com/Bootstrap-Image-Gallery/css/bootstrap-image-gallery.min.css">
 <!-- CSS to style the file input field as button and adjust the Bootstrap progress bars -->
-<link rel="stylesheet" href="{{asset('assets/packages/andrew13/cabinet/css/blueimp/jquery.fileupload-ui.css')}}">
+<link rel="stylesheet" href="{{asset('packages/andrew13/cabinet/css/jquery.fileupload-ui.css')}}">
 <!-- CSS adjustments for browsers with JavaScript disabled -->
-<noscript><link rel="stylesheet" href="{{asset('assets/packages/andrew13/cabinet/css/blueimp/jquery.fileupload-ui-noscript.css')}}"></noscript>
+<noscript><link rel="stylesheet" href="{{asset('packages/andrew13/cabinet/css/jquery.fileupload-ui-noscript.css')}}"></noscript>
 
 <!-- The file upload form used as target for the file upload widget -->
 <form id="fileupload" action="" method="POST" enctype="multipart/form-data">
@@ -127,29 +125,29 @@
 </script>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included -->
-<script src="{{asset('assets/packages/andrew13/cabinet/js/vendor/jquery.ui.widget.js')}}"></sript>
+<script src="{{asset('packages/andrew13/cabinet/js/vendor/jquery.ui.widget.js')}}"></sript>
 <!-- The Templates plugin is included to render the upload/download listings -->
-<script src="{{asset('assets/packages/andrew13/cabinet/js/blueimp/tmpl.min.js')}}"></script>
+<script src="{{asset('packages/andrew13/cabinet/js/blueimp/tmpl.min.js')}}"></script>
 <!-- The Load Image plugin is included for the preview images and image resizing functionality -->
-<script src="{{asset('assets/packages/andrew13/cabinet/js/blueimp/load-image.min.js')}}"></script>
+<script src="{{asset('packages/andrew13/cabinet/js/blueimp/load-image.min.js')}}"></script>
 <!-- The Canvas to Blob plugin is included for image resizing functionality -->
-<script src="{{asset('assets/packages/andrew13/cabinet/js/blueimp/canvas-to-blob.min.js')}}"></script>
+<script src="{{asset('packages/andrew13/cabinet/js/blueimp/canvas-to-blob.min.js')}}"></script>
 <!-- Bootstrap JS and Bootstrap Image Gallery are not required, but included for the demo -->
-<script src="{{asset('assets/packages/andrew13/cabinet/js/blueimp/bootstrap.min.js')}}"></script>
-<script src="{{asset('assets/packages/andrew13/cabinet/js/blueimp/bootstrap-image-gallery.min.js')}}"></script>
+<script src="{{asset('packages/andrew13/cabinet/js/blueimp/bootstrap.min.js')}}"></script>
+<script src="{{asset('packages/andrew13/cabinet/js/blueimp/bootstrap-image-gallery.min.js')}}"></script>
 <!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
-<script src="{{asset('assets/packages/andrew13/cabinet/js/jquery.iframe-transport.js')}}"></script>
+<script src="{{asset('packages/andrew13/cabinet/js/jquery.iframe-transport.js')}}"></script>
 <!-- The basic File Upload plugin -->
-<script src="{{asset('assets/packages/andrew13/cabinet/js/jquery.fileupload.js')}}"></script>
+<script src="{{asset('packages/andrew13/cabinet/js/jquery.fileupload.js')}}"></script>
 <!-- The File Upload processing plugin -->
-<script src="{{asset('assets/packages/andrew13/cabinet/js/jquery.fileupload-process.js')}}"></script>
+<script src="{{asset('packages/andrew13/cabinet/js/jquery.fileupload-process.js')}}"></script>
 <!-- The File Upload image resize plugin -->
-<script src="{{asset('assets/packages/andrew13/cabinet/js/jquery.fileupload-resize.js')}}"></script>
+<script src="{{asset('packages/andrew13/cabinet/js/jquery.fileupload-resize.js')}}"></script>
 <!-- The File Upload validation plugin -->
-<script src="{{asset('assets/packages/andrew13/cabinet/js/jquery.fileupload-validate.js')}}"></script>
+<script src="{{asset('packages/andrew13/cabinet/js/jquery.fileupload-validate.js')}}"></script>
 <!-- The File Upload user interface plugin -->
-<script src="{{asset('assets/packages/andrew13/cabinet/js/jquery.fileupload-ui.js')}}"></script>
+<script src="{{asset('packages/andrew13/cabinet/js/jquery.fileupload-ui.js')}}"></script>
 <!-- The main application script -->
-<script src="{{asset('assets/packages/andrew13/cabinet/js/main.js')}}"></script>
+<script src="{{asset('packages/andrew13/cabinet/js/main.js')}}"></script>
 <!-- The XDomainRequest Transport is included for cross-domain file deletion for IE8+ -->
 <!--[if gte IE 8]><script src="js/cors/jquery.xdr-transport.js"></script><![endif]-->
