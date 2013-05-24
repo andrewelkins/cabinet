@@ -1,7 +1,7 @@
 {
-    "name": "andrew13/laravel-4-file-upload",
-    "description": "Laravel 4 implementation of blueimp/jQuery-File-Upload",
-    "keywords": ["laravel","illuminate","file","uploads"],
+    "name": "andrew13/cabinet",
+    "description": "Laravel 4 implementation of blueimp/jQuery-File-Upload providing file upload.",
+    "keywords": ["laravel","illuminate","file","uploads","blueimp","jquery"],
     "license": "MIT",
     "authors": [
         {
@@ -10,11 +10,17 @@
     ],
     "require": {
         "php": ">=5.3.0",
-        "illuminate/support": "4.0.x"
+        "illuminate/database": "4.0.x",
+        "illuminate/support": "4.0.x",
+        "illuminate/view": "4.0.x"
+    },
+    "suggest": {
+        "zizaco/confide":"add Easy User management to Laravel 4",
+        "zizaco/entrust":"add Role-based Permissions to Laravel 4"
     },
     "autoload": {
         "psr-0": {
-            "Andrew13\\Laravel4FileUpload": "src/"
+            "Andrew13\\Cabinet": "src/"
         }
     },
     "minimum-stability": "dev"

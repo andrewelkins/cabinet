@@ -1,8 +1,8 @@
-<?php namespace Andrew13\Laravel4FileUpload;
+<?php namespace Andrew13\Cabinet;
 
 use Illuminate\Support\ServiceProvider;
 
-class Laravel4FileUploadServiceProvider extends ServiceProvider {
+class CabinetProvider extends ServiceProvider {
 
 	/**
 	 * Indicates if loading of the provider is deferred.
@@ -18,7 +18,7 @@ class Laravel4FileUploadServiceProvider extends ServiceProvider {
      */
     public function boot()
     {
-        $this->package('andrew13\laravel-4-file-upload');
+        $this->package('andrew13\cabinet');
     }
 
 	/**
@@ -28,9 +28,9 @@ class Laravel4FileUploadServiceProvider extends ServiceProvider {
 	 */
 	public function register()
 	{
-        $this->app->bind('l4fu', function($app)
+        $this->app->bind('cabinet', function($app)
         {
-            return new Laravel4FileUpload($app);
+            return new Cabinet($app);
         });
 	}
 
@@ -41,7 +41,7 @@ class Laravel4FileUploadServiceProvider extends ServiceProvider {
 	 */
 	public function provides()
 	{
-		return array('l4fu');
+		return array('cabinet');
 	}
 
 }
