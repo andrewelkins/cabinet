@@ -1,4 +1,4 @@
-<?php
+<?php namespace Andrew13\Cabinet;
 
 use LaravelBook\Ardent\Ardent;
 use Andrew13\Cabinet\CabinetUploadHandler;
