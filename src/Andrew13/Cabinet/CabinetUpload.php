@@ -2,6 +2,7 @@
 
 use LaravelBook\Ardent\Ardent;
 use Andrew13\Cabinet\CabinetUploadHandler;
+use Illuminate\Support\Facades\Lang;
 
 class CabinetUpload extends Ardent
 {
@@ -12,24 +13,25 @@ class CabinetUpload extends Ardent
 
     protected $errorMessages;
 
-    protected $app;
+    public static $app;
 
-    public function __construct( array $attributes = array(), CabinetUploadHandler $handler=null ) {
-        parent::__construct( $attributes );
+    public function __construct() {
+        parent::__construct();
 
         if ( ! static::$app )
             static::$app = app();
 
-        if (is_null($handler)) {
-            $this->options = static::$app['lang']->get('cabinet.options');
-            $this->errorMessages = static::$app['config']->get('cabinet.error_messages');
+        if (is_null($this->handler)) {
+//            $this->options = static::$app['config']->get('cabinet.options');
+//            $this->errorMessages = static::$app['config']->get('cabinet.error_messages');
 
-            $this->handler = new CabinetUploadHandler($this->options, true, $this->errorMessages);
-        } else {
-            $this->handler = $handler;
+//            $this->handler = new CabinetUploadHandler();
         }
     }
 
-
+    public function getHandlerFunction($method)
+    {
+        return $this->handler->$method;
+    }
 
 }

@@ -14,12 +14,11 @@ class Cabinet
     public $app;
 
     /**
-     * Create a new confide instance.
+     * Create a new cabinet instance.
      *
-     * @param Upload $upload
      * @return \Andrew13\Cabinet\Cabinet
      */
-    public function __construct(Upload $upload=null)
+    public function __construct()
     {
         $this->app = app();
     }

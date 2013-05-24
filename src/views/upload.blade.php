@@ -127,7 +127,7 @@
 </script>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included -->
-<script src="{{asset('assets/packages/andrew13/cabinet/js/vendor/jquery.ui.widget.js;)}}"></script>
+<script src="{{asset('assets/packages/andrew13/cabinet/js/vendor/jquery.ui.widget.js')}}"></sript>
 <!-- The Templates plugin is included to render the upload/download listings -->
 <script src="{{asset('assets/packages/andrew13/cabinet/js/blueimp/tmpl.min.js')}}"></script>
 <!-- The Load Image plugin is included for the preview images and image resizing functionality -->
