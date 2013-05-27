@@ -12,7 +12,9 @@
         "php": ">=5.3.0",
         "illuminate/database": "4.0.x",
         "illuminate/support": "4.0.x",
-        "illuminate/view": "4.0.x"
+        "illuminate/view": "4.0.x",
+        "codeguy/upload": "dev-master",
+        "sybio/image-workshop": "dev-master"
     },
     "suggest": {
         "zizaco/confide":"add Easy User management to Laravel 4",
