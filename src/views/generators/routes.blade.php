@@ -5,7 +5,7 @@
 // Cabinet routes
 Route::get( '{{ lcfirst(substr($name,0,-10)) }}',                        '{{ $name }}@index');
 Route::post('{{ lcfirst(substr($name,0,-10)) }}',                        '{{ $name }}@store');
-Route::get( '{{ lcfirst(substr($name,0,-10)) }}/results',                '{{ $name }}@results');
+Route::get( '{{ lcfirst(substr($name,0,-10)) }}/results',                '{{ $name }}@list');
 @else
 
 // Cabinet RESTful route

@@ -1,17 +1,120 @@
 Cabinet - Laravel 4 File Upload Package
 =====================
 
-Cabinet is a file upload package for Laravel 4. It is more or less a wrapper for the very popular
-[jQuery-File-Upload](https://github.com/blueimp/jQuery-File-Upload).
+Cabinet is a file upload package for Laravel 4.
 
 ![Cabinet Poster](http://i.imgur.com/y7YXeVQ.png)
 
+Cabinet is a package that allows easy upload of files and images.
+
+## Features
+
+* File Upload
+* Image Processing for display
+* Configurable Image options
+* Route, Controller, Model cli generators
 
 
-## TODO
+## Quick start
 
-* use lang file for messaging
-* config out the upload class
+### Required setup
+
+In the `require` key of `composer.json` file add the following
+
+    "andrew13/cabinet": "dev-master"
+
+Run the Composer update command
+
+    $ composer update
+
+In your `config/app.php` add `'Andrew13\Cabinet\CabinetServiceProvider'` to the end of the `$providers` array
+
+    'providers' => array(
+
+        'Illuminate\Foundation\Providers\ArtisanServiceProvider',
+        'Illuminate\Auth\AuthServiceProvider',
+        ...
+        'Andrew13\Cabinet\CabinetServiceProvider',
+
+    ),
+
+At the end of `config/app.php` add `'Cabinet'    => 'Andrew13\Cabinet\CabinetFacade'` to the `$aliases` array
+
+    'aliases' => array(
+
+        'App'        => 'Illuminate\Support\Facades\App',
+        'Artisan'    => 'Illuminate\Support\Facades\Artisan',
+        ...
+        'Cabinet'    => 'Andrew13\Cabinet\CabinetFacade',
+
+    ),
+
+
+### Upload model
+
+Now generate the Cabinet migration:
+
+    $ php artisan cabinet:migration
+
+It will generate the `<timestamp>_cabinet_setup_uploads_table.php` migration. You may now run it with the artisan migrate command:
+
+    $ php artisan migrate
+
+It will setup a table containing `filename`, `filetype`, `user_id` and `deleted_at` fields, which are the default fields needed for Cabinet use. Feel free to add more fields to the database.
+
+Change your User model in `app/models/User.php` to:
+
+    <?php
+
+    use Andrew13\Cabinet\CabinetUpload;
+
+    class Upload extends CabinetUpload {
+
+    }
+
+`CabinetUpload` class will take care of all the default upload behavior. This can be extended in your Upload model.
+
+
+### Dump the default assessors
+
+Least, you can dump a default controller and the default routes for Cabinet.
+
+    $ php artisan cabinet:controller
+    $ php artisan cabinet:routes
+
+Don't forget to dump composer autoload
+
+    $ composer dump-autoload
+
+**And you are ready to go.**
+Access `http://yourapp/upload` to upload a file. It is highly suggested to put some auth protection on the uploads.
+
+
+### Advanced
+
+#### Using custom table / model name
+
+To change the controller name when dumping the default controller template you can use the --name option.
+
+    $ php artisan cabinet:controller --name Uploader
+
+Will result in `UploaderController`
+
+Then, when dumping the routes, you should use the --controller option to match the existing controller.
+
+    $ php artisan confide:routes --controller Uploader
+
+#### Using custom form or emails
+
+First, publish the config files:
+
+    $ php artisan config:publish andrew13/cabinet
+
+Then edit the view names in `app/config/packages/andrew13/confide/config.php`.
+
+
+
+
 
 -----
 ## License

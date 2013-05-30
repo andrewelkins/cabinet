@@ -80,11 +80,9 @@ class MigrationCommand extends Command {
      * @return array
      */
     protected function getOptions()
-    {
-        $app = app();
-
+    {s
         return array(
-            array('table', null, InputOption::VALUE_OPTIONAL, 'Table name.', $app['config']->get('auth.table')),
+            array('table', null, InputOption::VALUE_OPTIONAL, 'Table name.', $app['config']->get('cabinet::upload_table')),
         );
     }
 
@@ -98,8 +96,8 @@ class MigrationCommand extends Command {
     protected function createMigration( $table = 'users' )
     {
         $app = app();
-        $migration_file = $this->laravel->path."/database/migrations/".date('Y_m_d_His')."_confide_setup_users_table.php";
-        $output = $app['view']->make('confide::generators.migration')->with('table', $table)->render();
+        $migration_file = $this->laravel->path."/database/migrations/".date('Y_m_d_His')."_cabinet_setup_uploads_table.php";
+        $output = $app['view']->make('cabinets::generators.migration')->with('table', $table)->render();
 
         if( ! file_exists( $migration_file ) )
         {

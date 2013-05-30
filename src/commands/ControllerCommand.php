@@ -15,14 +15,14 @@ class ControllerCommand extends Command {
      *
      * @var string
      */
-    protected $name = 'confide:controller';
+    protected $name = 'cabinet:controller';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Creates a controller template that uses Confide.';
+    protected $description = 'Creates an upload controller template that uses Cabinet.';
 
     /**
      * Create a new command instance.
@@ -33,7 +33,7 @@ class ControllerCommand extends Command {
     {
         parent::__construct();
         $app = app();
-        $app['view']->addNamespace('confide',substr(__DIR__,0,-8).'views');
+        $app['view']->addNamespace('cabinet',substr(__DIR__,0,-8).'views');
     }
 
     /**
@@ -89,7 +89,7 @@ class ControllerCommand extends Command {
         $app = app();
 
         return array(
-            array('name', null, InputOption::VALUE_OPTIONAL, 'Name of the controller.', $app['config']->get('auth.model')),
+            array('name', null, InputOption::VALUE_OPTIONAL, 'Name of the controller.', $app['config']->get('cabinet::upload_model')),
             array('--restful', '-r', InputOption::VALUE_NONE, 'Generate RESTful controller.'),
         );
     }
@@ -102,7 +102,9 @@ class ControllerCommand extends Command {
      */
     protected function prepareName($name = '')
     {
-        $name = ( $name != '') ? ucfirst($name) : 'User';
+        $app = app();
+
+        $name = ( $name != '') ? ucfirst($name) : $app['config']->get('cabinet::upload_model');
         
         if( substr($name,-10) == 'controller' )
         {
@@ -128,7 +130,7 @@ class ControllerCommand extends Command {
         $app = app();
 
         $controller_file = $this->laravel->path."/controllers/$name.php";
-        $output = $app['view']->make('confide::generators.controller')
+        $output = $app['view']->make('cabinet::generators.controller')
             ->with('name', $name)
             ->with('restful', $restful)
             ->render();

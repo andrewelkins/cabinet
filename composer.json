@@ -1,11 +1,12 @@
 {
     "name": "andrew13/cabinet",
-    "description": "Laravel 4 implementation of blueimp/jQuery-File-Upload providing file upload.",
-    "keywords": ["laravel","illuminate","file","uploads","blueimp","jquery"],
+    "description": "Laravel 4 file upload package.",
+    "keywords": ["laravel","illuminate","file","uploads","jquery"],
     "license": "MIT",
     "authors": [
         {
-            "name": "Andrew Elkins"
+            "name": "Andrew Elkins",
+            "url": "http://andrewelkins.com"
         }
     ],
     "require": {

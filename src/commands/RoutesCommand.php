@@ -57,7 +57,7 @@ class RoutesCommand extends Command {
         else
         {
             $message = "A single route to handle every action in a RESTful controller".
-            " will be appended to your routes.php file. This may be used with a confide".
+            " will be appended to your routes.php file. This may be used with a cabinet".
             " controller generated using [-r|--restful] option.";
         }
         
@@ -96,7 +96,7 @@ class RoutesCommand extends Command {
         $app = app();
 
         return array(
-            array('controller', null, InputOption::VALUE_OPTIONAL, 'Name of the controller.', $app['config']->get('auth.model')),
+            array('controller', null, InputOption::VALUE_OPTIONAL, 'Name of the controller.', 'Upload'),
             array('--restful', '-r', InputOption::VALUE_NONE, 'Generate RESTful controller.'),
         );
     }
