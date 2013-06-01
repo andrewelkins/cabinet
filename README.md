@@ -60,7 +60,7 @@ It will generate the `<timestamp>_cabinet_setup_uploads_table.php` migration. Yo
 
     $ php artisan migrate
 
-It will setup a table containing `filename`, `filetype`, `user_id` and `deleted_at` fields, which are the default fields needed for Cabinet use. Feel free to add more fields to the database.
+It will setup a table containing `filename`, `filetype`, `user_id` and `deleted_at` fields, which are the default fields needed for Cabinet use.
 
 Change your User model in `app/models/User.php` to:
 
@@ -104,7 +104,7 @@ Then, when dumping the routes, you should use the --controller option to match t
 
     $ php artisan confide:routes --controller Uploader
 
-#### Using custom form or emails
+#### Using custom form for upload
 
 First, publish the config files:
 
@@ -112,6 +112,11 @@ First, publish the config files:
 
 Then edit the view names in `app/config/packages/andrew13/confide/config.php`.
 
+*!*!*!*!*
+
+Need to add publish the public folder
+
+*!*!*!*!*
 
 
 

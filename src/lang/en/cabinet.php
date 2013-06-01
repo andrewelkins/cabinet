@@ -2,17 +2,10 @@
 
 return array(
 
-    'username' => 'Username',
-    'password' => 'Password',
-    'password_confirmation' => 'Confirm Password',
-    'e_mail' => 'Email',
-    'username_e_mail' => 'Username or Email',
-
-    'signup' => array(
-        'title' => 'Signup',
-        'desc' => 'Signup for new account',
-        'confirmation_required' => 'Confirmation required',
-        'submit' => 'Create new account',
+    'upload' => array(
+        'title' => 'Upload',
+        'desc' => 'Files are uploaded.',
+        'submit' => 'Upload',
     ),
 
 
