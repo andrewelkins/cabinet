@@ -135,6 +135,8 @@ It is then modified to fit this application. Thanks goes out to @Zizaco for that
 Workbench [tutorial](http://jasonlewis.me/article/laravel-4-develop-packages-using-the-workbench)
 by Jason Lewis was excellent in getting up and running with workbench.
 
+Composer and image upload tutorial from [Phil Sturgeon](http://philsturgeon.co.uk/blog/2012/09/package-watch-image-management).
+
 
 ## Additional information
 
