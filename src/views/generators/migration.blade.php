@@ -1,5 +1,6 @@
 {{ '<?php' }}
 
+
 use Illuminate\Database\Migrations\Migration;
 
 class CabinetSetupUploadsTable extends Migration {
@@ -16,7 +17,7 @@ class CabinetSetupUploadsTable extends Migration {
         {
             $table->increments('id');
             $table->string('filename');
-            $table->string('directory_path');
+            $table->string('path');
             $table->string('extension');
             $table->integer('user_id')->unsigned()->index();
             $table->timestamp('deleted_at');
