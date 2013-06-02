@@ -96,7 +96,7 @@ class RoutesCommand extends Command {
         $app = app();
 
         return array(
-            array('controller', null, InputOption::VALUE_OPTIONAL, 'Name of the controller.', 'Upload'),
+            array('controller', null, InputOption::VALUE_OPTIONAL, 'Name of the controller.', $this->app['config']->get('cabinet::upload_model')),
             array('--restful', '-r', InputOption::VALUE_NONE, 'Generate RESTful controller.'),
         );
     }
@@ -109,7 +109,7 @@ class RoutesCommand extends Command {
      */
     protected function prepareName( $name = '' )
     {
-        $name = ( $name != '') ? ucfirst($name) : 'User';
+        $name = ( $name != '') ? ucfirst($name) : 'Upload';
         
         if( substr($name,-10) == 'controller' )
         {
@@ -133,7 +133,7 @@ class RoutesCommand extends Command {
     protected function appendRoutes( $name = '', $restful = false )
     {        
         $app = app();
-        $routes_file = $this->laravel->path.'/routes.php';
+        $routes_file = $app['path'] . '/routes.php';
         $cabinet_routes = $app['view']->make('cabinet::generators.routes')
             ->with('name', $name)
             ->with('restful', $restful)
