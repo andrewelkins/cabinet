@@ -29,25 +29,25 @@ class {{ $name }} extends BaseController {
      */
     public function {{ (! $restful) ? 'store' : 'postIndex' }}()
     {
-        ${{ lcfirst(Config::get('auth.model')) }} = new {{ Config::get('cabinet::upload_model') }};
+        ${{ lcfirst(Config::get('cabinet::upload_model')) }} = new {{ Config::get('cabinet::upload_model') }};
 
         ${{ lcfirst(Config::get('cabinet::upload_model')) }}->filename = Input::get( 'username' );
-        ${{ lcfirst(Config::get('cabinet::upload_model')) }}->filetype = Input::get( 'email' );
-        ${{ lcfirst(Config::get('cabinet::upload_model')) }}->password = Input::get( 'password' );
+        ${{ lcfirst(Config::get('cabinet::upload_model')) }}->extension = Input::get( 'email' );
+        ${{ lcfirst(Config::get('cabinet::upload_model')) }}->path = Input::get( 'password' );
 
         // Process the files uploaded, and save them.
 
 
         // Save if valid. Password field will be hashed before save
-        ${{ lcfirst(Config::get('auth.model')) }}->save();
+        ${{ lcfirst(Config::get('cabinet::upload_model')) }}->save();
 
-        if ( ${{ lcfirst(Config::get('auth.model')) }}->id )
+        if ( ${{ lcfirst(Config::get('cabinet::upload_model')) }}->id )
         {
             // Redirect with success message, You may replace "Lang::get(..." for your custom message.
             @if (! $restful)
             return Redirect::action('{{ $name }}@list')
             @else
-            return Redirect::to('user/list')
+            return Redirect::to('upload/list')
             @endif
                 ->with( 'notice', Lang::get('confide::confide.alerts.account_created') );
         }
@@ -64,6 +64,11 @@ class {{ $name }} extends BaseController {
                 ->withInput(Input::except('password'))
                 ->with( 'error', $error );
         }
+    }
+
+    public function {{ (! $restful) ? 'list' : 'getList' }}()
+    {
+        return View::make(Config::get('cabinet::upload_list'));
     }
 
 }

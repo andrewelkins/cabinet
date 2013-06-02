@@ -49,7 +49,7 @@ class ControllerCommand extends Command {
         $this->line('');
         $this->info( "Controller name: $name".(($restful) ? "\nRESTful: Yes" : '') );
         $message = "An authentication ".(($restful) ? 'RESTful ' : '')."controller template with the name $name.php".
-        " will be created in app/controllers directory and will NOT overwrite any ".
+        " will be created in app/controllers directory and will NOT overwrite any".
         " file.";
 
         $this->comment( $message );

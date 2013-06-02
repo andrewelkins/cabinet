@@ -86,8 +86,17 @@ Don't forget to dump composer autoload
 
     $ composer dump-autoload
 
+
+### Publish public assets
+
+In order to use the js/css/images you'll need to publish the assets.
+
+```
+php artisan asset:publish --bench andrew13/cabinet
+```
+
 **And you are ready to go.**
-Access `http://yourapp/upload` to upload a file. It is highly suggested to put some auth protection on the uploads.
+Access `http://localhost/upload` to upload a file. It is highly suggested to put some auth protection on the uploads.
 
 
 ### Advanced
@@ -111,14 +120,19 @@ First, publish the config files:
     $ php artisan config:publish andrew13/cabinet
 
 Then edit the view names in `app/config/packages/andrew13/confide/config.php`.
-
-*!*!*!*!*
-
 Need to add publish the public folder
 
-*!*!*!*!*
+#### RESTful controller
 
+If you want to generate a [RESTful controller](https://github.com/laravel/docs/blob/master/controllers.md#restful-controllers) you can use the additional `--restful` or `-r` option.
 
+    $ php artisan cabinet:controller --restful
+
+Will result in a [RESTful controller](https://github.com/laravel/docs/blob/master/controllers.md#restful-controllers)
+
+Then, when dumping the routes, you should use the --restful option to match the existing controller.
+
+    $ php artisan cabinet:routes --restful
 
 
 -----

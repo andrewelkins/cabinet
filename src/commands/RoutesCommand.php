@@ -96,7 +96,7 @@ class RoutesCommand extends Command {
         $app = app();
 
         return array(
-            array('controller', null, InputOption::VALUE_OPTIONAL, 'Name of the controller.', $this->app['config']->get('cabinet::upload_model')),
+            array('controller', null, InputOption::VALUE_OPTIONAL, 'Name of the controller.', $app['config']->get('cabinet::upload_model')),
             array('--restful', '-r', InputOption::VALUE_NONE, 'Generate RESTful controller.'),
         );
     }
