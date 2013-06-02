@@ -134,7 +134,7 @@ class RoutesCommand extends Command {
     {        
         $app = app();
         $routes_file = $this->laravel->path.'/routes.php';
-        $confide_routes = $app['view']->make('cabinet::generators.routes')
+        $cabinet_routes = $app['view']->make('cabinet::generators.routes')
             ->with('name', $name)
             ->with('restful', $restful)
             ->render();
@@ -144,8 +144,8 @@ class RoutesCommand extends Command {
             $fs = fopen($routes_file, 'a');
             if ( $fs )
             {
-                fwrite($fs, $confide_routes);
-                $this->line($confide_routes);
+                fwrite($fs, $cabinet_routes);
+                $this->line($cabinet_routes);
                 fclose($fs);
                 return true;
             }

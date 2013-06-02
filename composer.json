@@ -1,12 +1,12 @@
 {
     "name": "andrew13/cabinet",
     "description": "Laravel 4 file upload package.",
-    "keywords": ["laravel","illuminate","file","uploads","jquery"],
+    "keywords": ["laravel","illuminate","file","uploads","jquery", "js"],
     "license": "MIT",
     "authors": [
         {
             "name": "Andrew Elkins",
-            "url": "http://andrewelkins.com"
+            "homepage": "http://andrewelkins.com"
         }
     ],
     "require": {
@@ -14,7 +14,7 @@
         "illuminate/database": "4.0.x",
         "illuminate/support": "4.0.x",
         "illuminate/view": "4.0.x",
-        "codeguy/upload": "dev-master",
+        "nesbot/carbon": "1.*",
         "sybio/image-workshop": "dev-master"
     },
     "suggest": {
@@ -22,6 +22,10 @@
         "zizaco/entrust":"add Role-based Permissions to Laravel 4"
     },
     "autoload": {
+        "classmap": [
+            "src/migrations",
+            "src/commands"
+        ],
         "psr-0": {
             "Andrew13\\Cabinet": "src/"
         }

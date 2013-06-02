@@ -60,9 +60,9 @@ It will generate the `<timestamp>_cabinet_setup_uploads_table.php` migration. Yo
 
     $ php artisan migrate
 
-It will setup a table containing `filename`, `filetype`, `user_id` and `deleted_at` fields, which are the default fields needed for Cabinet use.
+It will setup a table containing `filename`, `directory_path`, `extension`, `user_id` and `deleted_at` fields, which are the default fields needed for Cabinet use.
 
-Change your User model in `app/models/User.php` to:
+Create an pload model in `app/models/Upload.php`:
 
     <?php
 
@@ -135,7 +135,7 @@ It is then modified to fit this application. Thanks goes out to @Zizaco for that
 Workbench [tutorial](http://jasonlewis.me/article/laravel-4-develop-packages-using-the-workbench)
 by Jason Lewis was excellent in getting up and running with workbench.
 
-Composer and image upload tutorial from [Phil Sturgeon](http://philsturgeon.co.uk/blog/2012/09/package-watch-image-management).
+Image upload tutorial from [Phil Sturgeon](http://philsturgeon.co.uk/blog/2012/09/package-watch-image-management).
 
 
 ## Additional information

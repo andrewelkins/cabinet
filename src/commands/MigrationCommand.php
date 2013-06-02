@@ -33,7 +33,7 @@ class MigrationCommand extends Command {
     {
         parent::__construct();
         $app = app();
-        $app['view']->addNamespace('confide',substr(__DIR__,0,-8).'views');
+        $app['view']->addNamespace('cabinet',substr(__DIR__,0,-8).'views');
     }
 
     /**
@@ -80,7 +80,9 @@ class MigrationCommand extends Command {
      * @return array
      */
     protected function getOptions()
-    {s
+    {
+        $app = app();
+
         return array(
             array('table', null, InputOption::VALUE_OPTIONAL, 'Table name.', $app['config']->get('cabinet::upload_table')),
         );
@@ -93,11 +95,12 @@ class MigrationCommand extends Command {
      * @internal param string $name
      * @return bool
      */
-    protected function createMigration( $table = 'users' )
+    protected function createMigration( $table = 'uploads' )
     {
         $app = app();
-        $migration_file = $this->laravel->path."/database/migrations/".date('Y_m_d_His')."_cabinet_setup_uploads_table.php";
-        $output = $app['view']->make('cabinets::generators.migration')->with('table', $table)->render();
+
+        $migration_file = $app['path']."/database/migrations/".date('Y_m_d_His')."_cabinet_setup_uploads_table.php";
+        $output = $app['view']->make('cabinet::generators.migration')->with('table', $table)->render();
 
         if( ! file_exists( $migration_file ) )
         {

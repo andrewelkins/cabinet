@@ -33,7 +33,7 @@ class CabinetServiceProvider extends ServiceProvider {
             return new Cabinet($app);
         });
 
-//        $this->registerCommands();
+        $this->registerCommands();
     }
 
 	/**

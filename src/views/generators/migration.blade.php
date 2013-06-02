@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 
-class ConfideSetupUsersTable extends Migration {
+class CabinetSetupUploadsTable extends Migration {
 
     /**
      * Run the migrations.
@@ -16,7 +16,8 @@ class ConfideSetupUsersTable extends Migration {
         {
             $table->increments('id');
             $table->string('filename');
-            $table->string('filetype');
+            $table->string('directory_path');
+            $table->string('extension');
             $table->integer('user_id')->unsigned()->index();
             $table->timestamp('deleted_at');
             $table->timestamps();

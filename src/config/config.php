@@ -42,7 +42,7 @@ return array(
 
     /*
     |--------------------------------------------------------------------------
-    | Upload folder
+    | Upload Folder
     |--------------------------------------------------------------------------
     |
     | Folder the Uploader will use.
@@ -53,5 +53,20 @@ return array(
     */
 
     'upload_folder' => 'public/packages/andrew13/uploads',
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Upload Files
+    |--------------------------------------------------------------------------
+    |
+    | Configuration items for uploaded files.
+    |
+    */
+
+    'upload_file_types' => array('image/png','image/gif','image/jpg','image/jpeg'),
+    'max_upload_file_size' => '10M', // 1000B, 10M, 1G
+
+
 
 );
