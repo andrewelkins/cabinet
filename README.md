@@ -13,7 +13,7 @@ Cabinet is a package that allows easy upload of files and images.
 * Image Processing for display
 * Configurable Image options
 * Route, Controller, Model cli generators
-
+* [Configurable](#config)
 
 ## Quick start
 
@@ -113,14 +113,17 @@ Then, when dumping the routes, you should use the --controller option to match t
 
     $ php artisan confide:routes --controller Uploader
 
-#### Using custom form for upload
+
+<a name="config"></a>
+#### Using custom form for upload and other configuration options.
 
 First, publish the config files:
 
     $ php artisan config:publish andrew13/cabinet
 
 Then edit the view names in `app/config/packages/andrew13/confide/config.php`.
-Need to add publish the public folder
+
+Further, you can change the location of the uploads, type of upload files, and many more options!
 
 #### RESTful controller
 
@@ -149,7 +152,7 @@ It is then modified to fit this application. Thanks goes out to @Zizaco for that
 Workbench [tutorial](http://jasonlewis.me/article/laravel-4-develop-packages-using-the-workbench)
 by Jason Lewis was excellent in getting up and running with workbench.
 
-Image upload tutorial from [Phil Sturgeon](http://philsturgeon.co.uk/blog/2012/09/package-watch-image-management).
+Image upload tutorial from [Phil Sturgeon](http://philsturgeon.co.uk/blog/2012/09/package-watch-image-management) which inspired me to create this package.
 
 
 ## Additional information

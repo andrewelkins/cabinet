@@ -19,8 +19,9 @@ class CabinetSetupUploadsTable extends Migration {
             $table->string('filename');
             $table->string('path');
             $table->string('extension');
+            $table->string('mimetype');
             $table->integer('user_id')->unsigned()->index();
-            $table->timestamp('deleted_at');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

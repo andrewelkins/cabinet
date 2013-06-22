@@ -2,31 +2,37 @@
 
 use Carbon\Carbon;
 use Doctrine\Common\Proxy\Exception\InvalidArgumentException;
+use LaravelBook\Ardent\Ardent;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Illuminate\Support\Facades\File;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
-class CabinetUpload
+class CabinetUpload extends Ardent
 {
-    public $app;
+    public static $app;
 
-    public function __construct() {
-        parent::__construct();
+    /**
+     * Create a new CabinetUpload instance.
+     */
+    public function __construct( array $attributes = array() )
+    {
+        parent::__construct( $attributes );
 
-        if ( is_null($this->app) )
-            $this->app = app();
+        if ( ! static::$app )
+            static::$app = app();
     }
 
     /**
      * Upload a file.
      * Handles folder creation.
-     * @param $filename
-     * @param $contents
-     * @return array
+     * @param UploadedFile $file
      * @throws \Symfony\Component\HttpFoundation\File\Exception\FileException
+     * @return array
      */
-    public function upload($filename, $contents)
+    public function upload(UploadedFile $file)
     {
-        // Check the upload type is valid
-        $this->verifyUploadType($contents);
+        // Check the upload type is valid by extension and memtype
+        $this->verifyUploadType($file);
 
         // Get the folder for uploads
         $folder = $this->getUploadFolder();
@@ -34,7 +40,7 @@ class CabinetUpload
         // Check to see if the upload folder exists
         if (! File::exists($folder)) {
             // Try and create it
-            if (! File::makeDirectory($folder)) {
+            if (! File::makeDirectory($folder, static::$app['config']->get('cabinet::upload_folder_permission_value'), true)) {
                 throw new FileException('Directory is not writable. Please make upload folder writable.');
             }
         }
@@ -45,13 +51,14 @@ class CabinetUpload
         }
 
         // Check to see if file exists already. If so append a random string.
-        list($folder, $filename) = $this->resolveFileName($folder, $filename);
+        list($folder, $filename) = $this->resolveFileName($folder, $file->getClientOriginalName());
 
         // Upload the file to the folder
-        if(! File::put($folder.$filename, $contents)) {
+        if(! File::put($folder.$filename, $file)) {
             throw new FileException('Upload failed.');
         }
 
+        // If it returns an array it's a successful upload. Otherwise an exception will be thrown.
         return array($folder, $filename);
     }
 
@@ -70,29 +77,43 @@ class CabinetUpload
             throw new InvalidArgumentException('Must me a Carbon object');
         }
 
-        $path = $this->app['path.base'].$this->app['config']->get('cabinet::upload_folder');
+        // Get the configuration value for the upload path
+        $path = static::$app['config']->get('cabinet::upload_folder');
+
+        // Check to see if it begins in a slash
+        if(substr($path, 0) != '/') {
+            $path = '/' . $path;
+        }
 
         // Check to see if it ends in a slash
         if(substr($path, -1) != '/') {
             $path .= '/';
         }
 
-        // Parse in to a folder format. 2013/03/30/{filename}.jpg
-        return $path . str_replace(':','/',$date->toDateString()) . '/';
+        // Add the project base to the path
+        $path = static::$app['path.base'].$path;
+
+        // Parse in to a folder format. 2013:03:30 -> 2013/03/30/{filename}.jpg
+        return $path . str_replace('-','/',$date->toDateString()) . '/';
     }
 
     /**
-     * Resolve whether the fiel exists and if it already does, change the file name.
-     * @param $folder
+     * Resolve whether the file exists and if it already does, change the file name.
+     * @param string $folder
      * @param $file
+     * @param bool $enableObfuscation
      * @return array
      */
-    public function resolveFileName($folder, $file)
+    public function resolveFileName($folder, $file, $enableObfuscation=true)
     {
+        if(static::$app['config']->get('cabinet::obfuscate_filenames') && $enableObfuscation) {
+            $file = basename($file, $file->getExtension()) . '_' . md5( uniqid(mt_rand(), true) ) . '.' . $file->getExtension();
+        }
+
         // If file exists append string and try again.
         if (File::isFile($folder.$file)) {
             $file .= '_' . rand()&7;
-            list($folder, $file) = $this->resolveFileName($folder, $file);
+            list($folder, $file) = $this->resolveFileName($folder, $file, false);
         }
 
         return array($folder, $file);
@@ -100,14 +121,29 @@ class CabinetUpload
 
     /**
      * Checks the upload vs the upload types in the config.
-     * @param $contents
+     * @param $file
      * @throws \Symfony\Component\HttpFoundation\File\Exception\FileException
      */
-    public function verifyUploadType($contents)
+    public function verifyUploadType($file)
     {
-        if (! in_array(File::type($contents) ,$this->app['config']->get('cabinet::upload_file_types'))) {
+        if (! in_array($this->mimetype($file), static::$app['config']->get('cabinet::upload_file_types')) ||
+            ! in_array(strtolower($file->getClientOriginalExtension()), static::$app['config']->get('cabinet::upload_file_extensions'))) {
             throw new FileException('Invalid upload type.');
         }
+    }
+
+    /**
+     * Return the memetpe for a given file
+     * @param $file
+     * @return mixed
+     */
+    public function mimetype($file)
+    {
+        $finfo = finfo_open(FILEINFO_MIME_TYPE); // return mime type ala mimetype extension
+        $mimetype = finfo_file($finfo, $file);
+        finfo_close($finfo);
+
+        return $mimetype;
     }
 
 }

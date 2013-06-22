@@ -28,4 +28,8 @@ return array(
         'min_height' => 'Image requires a minimum height'
     ),
 
+    'alerts' => array(
+        'upload_success' => 'File has been successfully uploaded.',
+    ),
+
 );
