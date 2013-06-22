@@ -29,40 +29,33 @@ class {{ $name }} extends BaseController {
      */
     public function {{ (! $restful) ? 'store' : 'postIndex' }}()
     {
+        $file = Input::file('file');
+
         ${{ lcfirst(Config::get('cabinet::upload_model')) }} = new {{ Config::get('cabinet::upload_model') }};
 
-        ${{ lcfirst(Config::get('cabinet::upload_model')) }}->filename = Input::get( 'username' );
-        ${{ lcfirst(Config::get('cabinet::upload_model')) }}->extension = Input::get( 'email' );
-        ${{ lcfirst(Config::get('cabinet::upload_model')) }}->path = Input::get( 'password' );
+        try {
+            list(${{ lcfirst(Config::get('cabinet::upload_model')) }}->filename, ${{ lcfirst(Config::get('cabinet::upload_model')) }}->path) = ${{ lcfirst(Config::get('cabinet::upload_model')) }}->upload($file);
+        } catch(Exception $exception){
+            // Something went wrong. Log it.
+            Log::error($exception);
+            // Return error
+            return Response::json($exception->getMessage(), 400);
+        }
 
-        // Process the files uploaded, and save them.
+        // File extension
+        ${{ lcfirst(Config::get('cabinet::upload_model')) }}->extension = $file->getExtension();
+        // Mimetype for the file
+        ${{ lcfirst(Config::get('cabinet::upload_model')) }}->mimetype = ${{ lcfirst(Config::get('cabinet::upload_model')) }}->mimetype($file);
+        // Current user or 0
+        ${{ lcfirst(Config::get('cabinet::upload_model')) }}->user_id = (Auth::user() ? Auth::user()->id : 0);
 
-
-        // Save if valid. Password field will be hashed before save
         ${{ lcfirst(Config::get('cabinet::upload_model')) }}->save();
 
-        if ( ${{ lcfirst(Config::get('cabinet::upload_model')) }}->id )
-        {
-            // Redirect with success message, You may replace "Lang::get(..." for your custom message.
-            @if (! $restful)
-            return Redirect::action('{{ $name }}@list')
-            @else
-            return Redirect::to('upload/list')
-            @endif
-                ->with( 'notice', Lang::get('confide::confide.alerts.account_created') );
-        }
-        else
-        {
-            // Get validation errors (see Ardent package)
-            $error = ${{ lcfirst(Config::get('cabinet::upload_model')) }}->errors()->all(':message');
-
-            @if (! $restful)
-            return Redirect::action('{{ $name }}@index')
-            @else
-            return Redirect::to('upload')
-            @endif
-                ->withInput(Input::except('password'))
-                ->with( 'error', $error );
+        // If it now has an id, it should have been successful.
+        if ( ${{ lcfirst(Config::get('cabinet::upload_model')) }}->id ) {
+            return Response::json(array('status' => 'success', 'file' => ${{ lcfirst(Config::get('cabinet::upload_model')) }}->toArray()), 200);
+        } else {
+            return Response::json('Error', 400);
         }
     }
 
