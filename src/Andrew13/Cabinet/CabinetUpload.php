@@ -140,7 +140,8 @@ class CabinetUpload extends Ardent
                     $last += 1;
                     // Prepare to add the proper amount of 0's in front
                     $b = 4 - strlen($last);
-                    for ($c=$b; $c <= 4; $c++) {
+                    $i = $last;
+                    for ($c=1; $c <= $b; $c++) {
                         $i = '0' . $i;
                     }
                 } else {
