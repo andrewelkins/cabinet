@@ -62,7 +62,7 @@ It will generate the `<timestamp>_cabinet_setup_uploads_table.php` migration. Yo
 
 It will setup a table containing `filename`, `directory_path`, `extension`, `user_id` and `deleted_at` fields, which are the default fields needed for Cabinet use.
 
-Create an pload model in `app/models/Upload.php`:
+Create an upload model in `app/models/Upload.php`:
 
     <?php
 

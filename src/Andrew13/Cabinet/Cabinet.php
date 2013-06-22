@@ -36,11 +36,20 @@ class Cabinet
     /**
      * Display the default upload view
      *
-     * @deprecated
      * @return Illuminate\View\View
      */
     public function makeUploadForm()
     {
         return $this->app['view']->make($this->app['config']->get('cabinet::upload_form'));
+    }
+
+    /**
+     * Display the default upload list view
+     *
+     * @return Illuminate\View\View
+     */
+    public function makeUploadListForm()
+    {
+        return $this->app['view']->make($this->app['config']->get('cabinet::upload_list'));
     }
 }

@@ -31,7 +31,7 @@ class CabinetUpload extends Ardent
      */
     public function upload(UploadedFile $file)
     {
-        // Check the upload type is valid by extension and memtype
+        // Check the upload type is valid by extension and mimetype
         $this->verifyUploadType($file);
 
         // Get the folder for uploads
@@ -50,16 +50,21 @@ class CabinetUpload extends Ardent
             throw new FileException('Folder is not writable.');
         }
 
+        // Check file size
+        if ($file->getSize() > static::$app['config']->get('cabinet::max_upload_file_size')) {
+            throw new FileException('File is too big.');
+        }
+
         // Check to see if file exists already. If so append a random string.
-        list($folder, $filename) = $this->resolveFileName($folder, $file->getClientOriginalName());
+        list($folder, $file) = $this->resolveFileName($folder, $file);
 
         // Upload the file to the folder
-        if(! File::put($folder.$filename, $file)) {
+        if(! File::put($folder.$file->fileSystemName, $file)) {
             throw new FileException('Upload failed.');
         }
 
         // If it returns an array it's a successful upload. Otherwise an exception will be thrown.
-        return array($folder, $filename);
+        return array($folder, $file->fileSystemName);
     }
 
     /**
@@ -104,15 +109,50 @@ class CabinetUpload extends Ardent
      * @param bool $enableObfuscation
      * @return array
      */
-    public function resolveFileName($folder, $file, $enableObfuscation=true)
+    public function resolveFileName($folder, UploadedFile $file, $enableObfuscation=true)
     {
+        if(! isset($file->fileSystemName)) {
+            $file->fileSystemName = $file->getClientOriginalName();
+        }
+
         if(static::$app['config']->get('cabinet::obfuscate_filenames') && $enableObfuscation) {
-            $file = basename($file, $file->getExtension()) . '_' . md5( uniqid(mt_rand(), true) ) . '.' . $file->getExtension();
+            $file = basename($file->fileSystemName, $file->getClientOriginalExtension()) . '_' . md5( uniqid(mt_rand(), true) ) . '.' . $file->getClientOriginalExtension();
         }
 
         // If file exists append string and try again.
-        if (File::isFile($folder.$file)) {
-            $file .= '_' . rand()&7;
+        if (File::isFile($folder.$file->fileSystemName)) {
+            // Default file postfix
+            $i = '0000';
+
+            // Get the file bits
+            $basename = basename($file->fileSystemName, $file->getClientOriginalExtension());
+            // Remove trailing period
+            $basename = (substr($basename, -1) == '.' ? substr($basename,0,strlen($basename)-1) : $basename);
+            $basenamePieces = explode('_', $basename);
+
+            // If there's more than one piece then let see if it's our counter.
+            if (count($basenamePieces) > 1) {
+                // Pop the last part of the array off.
+                $last = array_pop($basenamePieces);
+                // Check to see if the last piece is an int. Must be 4 long. This isn't the best, but it'll do in most cases.
+                if (strlen($last) == 4 && (is_int($last) || ctype_digit($last))) {
+                    // Add one, which converts this string to an int. Gotta love PHP ;)
+                    $last += 1;
+                    // Prepare to add the proper amount of 0's in front
+                    $b = 4 - strlen($last);
+                    for ($c=$b; $c <= 4; $c++) {
+                        $i = '0' . $i;
+                    }
+                } else {
+                    // Put last back on the array
+                    array_push($basenamePieces, $last);
+                }
+                // Put the pieces back together without the postfix.
+                $basename = implode('_', $basenamePieces);
+            }
+
+            // Create the filename
+            $file->fileSystemName = $basename . '_' . $i . '.' . $file->getClientOriginalExtension();
             list($folder, $file) = $this->resolveFileName($folder, $file, false);
         }
 
@@ -124,26 +164,12 @@ class CabinetUpload extends Ardent
      * @param $file
      * @throws \Symfony\Component\HttpFoundation\File\Exception\FileException
      */
-    public function verifyUploadType($file)
+    public function verifyUploadType(UploadedFile $file)
     {
-        if (! in_array($this->mimetype($file), static::$app['config']->get('cabinet::upload_file_types')) ||
+        if (! in_array($file->getMimeType() , static::$app['config']->get('cabinet::upload_file_types')) ||
             ! in_array(strtolower($file->getClientOriginalExtension()), static::$app['config']->get('cabinet::upload_file_extensions'))) {
             throw new FileException('Invalid upload type.');
         }
-    }
-
-    /**
-     * Return the memetpe for a given file
-     * @param $file
-     * @return mixed
-     */
-    public function mimetype($file)
-    {
-        $finfo = finfo_open(FILEINFO_MIME_TYPE); // return mime type ala mimetype extension
-        $mimetype = finfo_file($finfo, $file);
-        finfo_close($finfo);
-
-        return $mimetype;
     }
 
 }

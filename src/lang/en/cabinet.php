@@ -10,11 +10,12 @@ return array(
 
 
     'error_messages' => array(
-        1 => 'The uploaded file exceeds the upload_max_filesize directive in php.ini',
-        2 => 'The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form',
-        3 => 'The uploaded file was only partially uploaded',
-        4 => 'No file was uploaded',
-        6 => 'Missing a temporary folder',
+        'error'                 => 'error',
+        'exceeds_max_filesize'  => 'The uploaded file exceeds the upload_max_filesize',
+        'exceeds_max_filesize_in_form' => 'The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form',
+        'upload_partially_uploaded' => 'The uploaded file was only partially uploaded',
+        'no_file_uploaded' => 'No file was uploaded',
+        'missing_temporary_folder' => 'Missing a temporary folder',
         7 => 'Failed to write file to disk',
         8 => 'A PHP extension stopped the file upload',
         'post_max_size' => 'The uploaded file exceeds the post_max_size directive in php.ini',
