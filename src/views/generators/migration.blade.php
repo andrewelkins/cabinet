@@ -18,6 +18,7 @@ class CabinetSetupUploadsTable extends Migration {
             $table->increments('id');
             $table->string('filename');
             $table->string('path');
+            $table->integer('size');
             $table->string('extension');
             $table->string('mimetype');
             $table->integer('user_id')->unsigned()->index();

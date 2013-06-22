@@ -1,15 +1,16 @@
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/datatables/1.9.4/jquery.dataTables.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/datatables-tabletools/2.1.4/js/TableTools.min.js"></script>
 
 <table id="uploads" class="table table-bordered table-hover">
     <thead>
     <tr>
-        <th class="span2">{{{ Lang::get('admin/users/table.username') }}}</th>
-        <th class="span3">{{{ Lang::get('admin/users/table.email') }}}</th>
-        <th class="span3">{{{ Lang::get('admin/users/table.roles') }}}</th>
-        <th class="span2">{{{ Lang::get('admin/users/table.activated') }}}</th>
-        <th class="span2">{{{ Lang::get('admin/users/table.created_at') }}}</th>
-        <th class="span2">{{{ Lang::get('table.actions') }}}</th>
+        <th class="span2">{{{ Lang::get('cabinet::table.filename') }}}</th>
+        <th class="span2">{{{ Lang::get('cabinet::table.file_path') }}}</th>
+        <th class="span2">{{{ Lang::get('cabinet::table.extension') }}}</th>
+        <th class="span2">{{{ Lang::get('cabinet::table.size') }}}</th>
+        <th class="span2">{{{ Lang::get('cabinet::table.mimetype') }}}</th>
+        <th class="span2">{{{ Lang::get('cabinet::table.user_id') }}}</th>
     </tr>
     </thead>
     <tbody>

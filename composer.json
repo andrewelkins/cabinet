@@ -16,8 +16,9 @@
         "illuminate/view": "4.0.x",
         "laravelbook/ardent": "*",
         "nesbot/carbon": "1.*",
-        "sybio/image-workshop": "dev-master"
-    },
+        "bllim/datatables": "*",
+        "intervention/image": "dev-master"
+},
     "suggest": {
         "zizaco/confide":"add Easy User management to Laravel 4",
         "zizaco/entrust":"add Role-based Permissions to Laravel 4"
