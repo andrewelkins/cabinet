@@ -1,4 +1,4 @@
-Cabinet - Laravel 4 File Upload Package
+Cabinet - Laravel 4 File Upload Package (ALPHA - Work in progress)
 =====================
 
 Cabinet is a file upload package for Laravel 4.
