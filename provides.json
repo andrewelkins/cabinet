@@ -1,0 +1,11 @@
+{
+    "providers": [
+        "Andrew13\Cabinet\CabinetServiceProvider"
+    ],
+    "aliases": [
+        {
+            "alias": "Cabinet",
+            "facade": "Andrew13\Cabinet\CabinetFacade"
+        }
+    ]
+}
