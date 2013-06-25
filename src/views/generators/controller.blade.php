@@ -45,7 +45,7 @@ class {{ $name }} extends BaseController {
         // File extension
         ${{ lcfirst(Config::get('cabinet::upload_model')) }}->extension = $file->getExtension();
         // Mimetype for the file
-        ${{ lcfirst(Config::get('cabinet::upload_model')) }}->mimetype = ${{ lcfirst(Config::get('cabinet::upload_model')) }}->mimetype($file);
+        ${{ lcfirst(Config::get('cabinet::upload_model')) }}->mimetype = ${{ lcfirst(Config::get('cabinet::upload_model')) }}->getMimeType();
         // Current user or 0
         ${{ lcfirst(Config::get('cabinet::upload_model')) }}->user_id = (Auth::user() ? Auth::user()->id : 0);
 
