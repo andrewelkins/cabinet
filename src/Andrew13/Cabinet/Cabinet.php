@@ -13,6 +13,7 @@ class Cabinet
      */
     public $app;
 
+
     /**
      * Create a new cabinet instance.
      *

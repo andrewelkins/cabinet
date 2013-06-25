@@ -64,4 +64,16 @@ class {{ $name }} extends BaseController {
         return View::make(Config::get('cabinet::upload_list'));
     }
 
+    public function {{ (! $restful) ? 'data' : 'getData' }}()
+    {
+        $users = {{ Config::get('cabinet::upload_model') }}::all();
+
+        return Datatables::of($users)
+            ->remove_column('id')
+            ->remove_column('deleted_at')
+            ->remove_column('created_at')
+            ->remove_column('updated_at')
+            ->make();
+    }
+
 }

@@ -29,7 +29,7 @@
             },
             "bProcessing": true,
             "bServerSide": true,
-            "sAjaxSource": "{{ URL::to('uploads/data') }}"
+            "sAjaxSource": "{{ URL::to('upload/data') }}"
         });
     });
 </script>
