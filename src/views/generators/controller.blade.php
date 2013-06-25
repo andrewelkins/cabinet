@@ -66,9 +66,9 @@ class {{ $name }} extends BaseController {
 
     public function {{ (! $restful) ? 'data' : 'getData' }}()
     {
-        $users = {{ Config::get('cabinet::upload_model') }}::all();
+        $uploads = {{ Config::get('cabinet::upload_model') }}::all();
 
-        return Datatables::of($users)
+        return Datatables::of($uploads)
             ->remove_column('id')
             ->remove_column('deleted_at')
             ->remove_column('created_at')
