@@ -92,7 +92,7 @@ Don't forget to dump composer autoload
 In order to use the js/css/images you'll need to publish the assets.
 
 ```
-php artisan asset:publish --bench andrew13/cabinet
+php artisan asset:publish andrew13/cabinet
 ```
 
 **And you are ready to go.**
