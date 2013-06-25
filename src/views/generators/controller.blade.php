@@ -24,7 +24,7 @@ class {{ $name }} extends BaseController {
     }
 
     /**
-     * Stores new account
+     * Stores new upload
      *
      */
     public function {{ (! $restful) ? 'store' : 'postIndex' }}()
@@ -66,13 +66,16 @@ class {{ $name }} extends BaseController {
 
     public function {{ (! $restful) ? 'data' : 'getData' }}()
     {
-        $uploads = {{ Config::get('cabinet::upload_model') }}::all();
+        $uploads =  {{ Config::get('cabinet::upload_model') }}::leftjoin('users', 'uploads.id', '=', 'users.id')
+            ->select(
+                array('uploads.id', 'uploads.filename', 'uploads.path', 'uploads.extension',
+                    'uploads.size', 'uploads.mimetype', 'users.id as user_id', 'users.username as username')
+            );
 
         return Datatables::of($uploads)
             ->remove_column('id')
-            ->remove_column('deleted_at')
-            ->remove_column('created_at')
-            ->remove_column('updated_at')
+            ->remove_column('user_id')
+            ->edit_column('username', '<a href="{{ URL::to(\'admin/users/\'.$id.\'/edit\') }}">{{$username}}</a>')
             ->make();
     }
 

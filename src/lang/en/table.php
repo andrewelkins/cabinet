@@ -8,6 +8,7 @@ return array(
     'size' => 'Size',
     'mimetype' => 'Mimetype',
     'user_id' => 'User Id',
+    'username' => 'Username',
 
 
 );

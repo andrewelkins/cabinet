@@ -12,6 +12,16 @@ class CabinetUpload extends Ardent
     public static $app;
 
     /**
+     * Get the uploads owner.
+     *
+     * @return User
+     */
+    public function user()
+    {
+        return $this->belongsTo('User', 'user_id');
+    }
+
+    /**
      * Create a new CabinetUpload instance.
      */
     public function __construct( array $attributes = array() )

@@ -10,14 +10,12 @@
         <th class="span2">{{{ Lang::get('cabinet::table.extension') }}}</th>
         <th class="span2">{{{ Lang::get('cabinet::table.size') }}}</th>
         <th class="span2">{{{ Lang::get('cabinet::table.mimetype') }}}</th>
-        <th class="span2">{{{ Lang::get('cabinet::table.user_id') }}}</th>
+        <th class="span2">{{{ Lang::get('cabinet::table.username') }}}</th>
     </tr>
     </thead>
     <tbody>
     </tbody>
 </table>
-
-
 
 <script type="text/javascript">
     var oTable;
