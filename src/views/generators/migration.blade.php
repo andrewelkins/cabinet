@@ -22,6 +22,7 @@ class CabinetSetupUploadsTable extends Migration {
             $table->string('extension');
             $table->string('mimetype');
             $table->integer('user_id')->unsigned()->index();
+            $table->integer('parent_id')->unsigned()->index(); // If this is a child file, it'll be referenced here.
             $table->softDeletes();
             $table->timestamps();
         });

@@ -5,8 +5,8 @@
 <table id="uploads" class="table table-bordered table-hover">
     <thead>
     <tr>
-        <th class="span2">{{{ Lang::get('cabinet::table.filename') }}}</th>
         <th class="span2">{{{ Lang::get('cabinet::table.file_path') }}}</th>
+        <th class="span2">{{{ Lang::get('cabinet::table.filename') }}}</th>
         <th class="span2">{{{ Lang::get('cabinet::table.extension') }}}</th>
         <th class="span2">{{{ Lang::get('cabinet::table.size') }}}</th>
         <th class="span2">{{{ Lang::get('cabinet::table.mimetype') }}}</th>

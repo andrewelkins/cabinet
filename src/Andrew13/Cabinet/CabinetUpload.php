@@ -11,6 +11,8 @@ class CabinetUpload extends Ardent
 {
     public static $app;
 
+    protected $dateFolderPath;
+
     /**
      * Get the uploads owner.
      *
@@ -74,7 +76,7 @@ class CabinetUpload extends Ardent
         }
 
         // If it returns an array it's a successful upload. Otherwise an exception will be thrown.
-        return array($folder, $file->fileSystemName);
+        return array(static::$app['config']->get('cabinet::upload_folder_public_path').$this->dateFolderPath.$file->fileSystemName, $file->fileSystemName);
     }
 
     /**
@@ -108,8 +110,10 @@ class CabinetUpload extends Ardent
         // Add the project base to the path
         $path = static::$app['path.base'].$path;
 
+        $this->dateFolderPath = str_replace('-','/',$date->toDateString()) . '/';
+
         // Parse in to a folder format. 2013:03:30 -> 2013/03/30/{filename}.jpg
-        return $path . str_replace('-','/',$date->toDateString()) . '/';
+        return $path . $this->dateFolderPath;
     }
 
     /**

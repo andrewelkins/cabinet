@@ -43,11 +43,13 @@ class {{ $name }} extends BaseController {
         }
 
         // File extension
-        ${{ lcfirst(Config::get('cabinet::upload_model')) }}->extension = $file->getExtension();
+        ${{ lcfirst(Config::get('cabinet::upload_model')) }}->extension = $file->getClientOriginalExtension();
         // Mimetype for the file
         ${{ lcfirst(Config::get('cabinet::upload_model')) }}->mimetype = $file->getMimeType();
         // Current user or 0
         ${{ lcfirst(Config::get('cabinet::upload_model')) }}->user_id = (Auth::user() ? Auth::user()->id : 0);
+
+        ${{ lcfirst(Config::get('cabinet::upload_model')) }}->size = $file->getSize();
 
         ${{ lcfirst(Config::get('cabinet::upload_model')) }}->save();
 
@@ -75,7 +77,7 @@ class {{ $name }} extends BaseController {
         return Datatables::of($uploads)
             ->remove_column('id')
             ->remove_column('user_id')
-            ->edit_column('username', '<a href="{{ URL::to(\'admin/users/\'.$id.\'/edit\') }}">{{$username}}</a>')
+            ->remove_column('parent_id')
             ->make();
     }
 
