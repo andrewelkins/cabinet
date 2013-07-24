@@ -53,7 +53,7 @@ return array(
     */
 
     'upload_folder' => 'public/packages/andrew13/cabinet/uploads/',
-    'upload_folder_public_path' => 'assets/uploads/',
+    'upload_folder_public_path' => 'packages/andrew13/cabinet/uploads/',
     'upload_folder_permission_value' => 0777, // Default 0777 - Other likely values 0775, 0755
 
 
