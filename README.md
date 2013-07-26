@@ -10,8 +10,8 @@ Cabinet is a package that allows easy upload of files and images.
 ## Features
 
 * File Upload
-* Image Processing for display (Coming Soon)
-* Configurable Image options (Coming Soon)
+* Image Processing for display
+* Configurable Image options
 * Route, Controller, Model cli generators
 * [Configurable](#config)
 
