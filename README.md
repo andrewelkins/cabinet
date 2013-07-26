@@ -1,4 +1,4 @@
-Cabinet - Laravel 4 File Upload Package (Version 0.1.1)
+Cabinet - Laravel 4 File Upload Package (Version 0.1.3)
 =====================
 
 Cabinet is a file upload package for Laravel 4.
@@ -69,6 +69,8 @@ Create an upload model in `app/models/Upload.php`:
     use Andrew13\Cabinet\CabinetUpload;
 
     class Upload extends CabinetUpload {
+
+        protected $softDelete = true;
 
     }
 
