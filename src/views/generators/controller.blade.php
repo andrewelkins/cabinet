@@ -16,7 +16,7 @@ class {{ $name }} extends BaseController {
      * Displays the form for account creation
      *
      */
-    public function {{ (! $restful) ? 'index' : 'getIndex' }}()
+    public function {{ (! $restful) ? 'create' : 'getCreate' }}()
     {
         return View::make(Config::get('cabinet::upload_form'));
     }
@@ -48,7 +48,7 @@ class {{ $name }} extends BaseController {
         }
     }
 
-    public function {{ (! $restful) ? 'list' : 'getList' }}()
+    public function {{ (! $restful) ? 'index' : 'getIndex' }}()
     {
         return View::make(Config::get('cabinet::upload_list'));
     }
