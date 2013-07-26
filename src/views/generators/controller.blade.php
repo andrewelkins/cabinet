@@ -12,8 +12,6 @@
 
 class {{ $name }} extends BaseController {
 
-    protected $softDelete = true;
-
     /**
      * Displays the form for account creation
      *
