@@ -53,6 +53,7 @@ return array(
     */
 
     'upload_folder' => 'public/packages/andrew13/cabinet/uploads/',
+    'upload_folder_public_path' => 'packages/andrew13/cabinet/uploads/',
     'upload_folder_permission_value' => 0777, // Default 0777 - Other likely values 0775, 0755
 
 
@@ -75,5 +76,28 @@ return array(
     // [False] attempts to leaves the filename as is.
     'obfuscate_filenames' => false, // True/False
 
+    /*
+    |--------------------------------------------------------------------------
+    | Image
+    |--------------------------------------------------------------------------
+    |
+    | Configuration items for image files.
+    |
+    */
+
+    // Enabled image manipulation for uploaded images.
+    'image_manipulation' => 'true',
+
+    // Must be in the upload list as well.
+    // Must also be supported by invention. http://intervention.olivervogel.net/image/formats/image
+    'image_file_types' => array('image/png','image/gif','image/jpg','image/jpeg'),
+    'image_file_extensions' => array('png','gif','jpg','jpeg'), // Case insensitive
+
+    // Image resizing params. http://intervention.olivervogel.net/image/methods/resize
+    'image_resize' => array(
+        array(300, 200), // 300x200 image
+        array(300, 200, true), // 300x200 image ratio constrained aspect ratio
+        array(null, 400, true), // auto width x 400 height constrained aspect ratio
+    ),
 
 );

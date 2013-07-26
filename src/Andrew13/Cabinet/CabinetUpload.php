@@ -1,13 +1,16 @@
 <?php namespace Andrew13\Cabinet;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Model as Eloquent;
 use Doctrine\Common\Proxy\Exception\InvalidArgumentException;
-use LaravelBook\Ardent\Ardent;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Intervention\Image\Image;
 
-class CabinetUpload extends Ardent
+class CabinetUpload extends Eloquent
 {
     public static $app;
 
@@ -24,6 +27,15 @@ class CabinetUpload extends Ardent
     }
 
     /**
+     * Get children uploads
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function children()
+    {
+        return $this->hasMany('Upload', 'parent_id');
+    }
+
+    /**
      * Create a new CabinetUpload instance.
      */
     public function __construct( array $attributes = array() )
@@ -33,6 +45,51 @@ class CabinetUpload extends Ardent
         if ( ! static::$app )
             static::$app = app();
     }
+    
+    public function process(UploadedFile $file)
+    {
+        // File extension
+        $this->extension = $file->getClientOriginalExtension();
+        // Mimetype for the file
+        $this->mimetype = $file->getMimeType();
+        // Current user or 0
+        $this->user_id = (Auth::user() ? Auth::user()->id : 0);
+
+        $this->size = $file->getSize();
+
+        list($this->path, $this->filename) = $this->upload($file);
+
+        $this->save();
+
+        // Check to see if image thumbnail generation is enabled
+        if(static::$app['config']->get('cabinet::image_manipulation')) {
+            $thumbnails = $this->generateThumbnails($this->path, $this->filename);
+            $uploads = array();
+            foreach($thumbnails as $thumbnail) {
+                $upload = new $this;
+
+                $upload->filename = $thumbnail->fileSystemName;
+
+                $upload->path = static::$app['config']->get('cabinet::upload_folder_public_path').$this->dateFolderPath.$thumbnail->fileSystemName;
+                // File extension
+                $upload->extension = $thumbnail->getClientOriginalExtension();
+                // Mimetype for the file
+                $upload->mimetype = $thumbnail->getMimeType();
+                // Current user or 0
+                $upload->user_id = $this->user_id;
+
+                $upload->size = $thumbnail->getSize();
+
+                $upload->parent_id = $this->id;
+
+                $upload->save();
+
+                $uploads[] = $upload;
+            }
+            $this->children = $uploads;
+        }
+
+    }
 
     /**
      * Upload a file.
@@ -41,26 +98,13 @@ class CabinetUpload extends Ardent
      * @throws \Symfony\Component\HttpFoundation\File\Exception\FileException
      * @return array
      */
-    public function upload(UploadedFile $file)
+    public function upload(UploadedFile &$file)
     {
         // Check the upload type is valid by extension and mimetype
         $this->verifyUploadType($file);
 
         // Get the folder for uploads
         $folder = $this->getUploadFolder();
-
-        // Check to see if the upload folder exists
-        if (! File::exists($folder)) {
-            // Try and create it
-            if (! File::makeDirectory($folder, static::$app['config']->get('cabinet::upload_folder_permission_value'), true)) {
-                throw new FileException('Directory is not writable. Please make upload folder writable.');
-            }
-        }
-
-        // Check that the folder is writable
-        if (! File::isWritable($folder)) {
-            throw new FileException('Folder is not writable.');
-        }
 
         // Check file size
         if ($file->getSize() > static::$app['config']->get('cabinet::max_upload_file_size')) {
@@ -70,18 +114,17 @@ class CabinetUpload extends Ardent
         // Check to see if file exists already. If so append a random string.
         list($folder, $file) = $this->resolveFileName($folder, $file);
 
-        // Upload the file to the folder
-        if(! File::put($folder.$file->fileSystemName, $file)) {
-            throw new FileException('Upload failed.');
-        }
+        // Upload the file to the folder. Exception thrown from move.
+        $file->move($folder, $file->fileSystemName);
 
         // If it returns an array it's a successful upload. Otherwise an exception will be thrown.
-        return array(static::$app['config']->get('cabinet::upload_folder_public_path').$this->dateFolderPath.$file->fileSystemName, $file->fileSystemName);
+        return array($this->cleanPath(static::$app['config']->get('cabinet::upload_folder')).$this->dateFolderPath, $file->fileSystemName);
     }
 
     /**
      * Get upload path with date folders
      * @param $date
+     * @throws \Symfony\Component\HttpFoundation\File\Exception\FileException
      * @throws \Doctrine\Common\Proxy\Exception\InvalidArgumentException
      * @return string
      */
@@ -97,15 +140,7 @@ class CabinetUpload extends Ardent
         // Get the configuration value for the upload path
         $path = static::$app['config']->get('cabinet::upload_folder');
 
-        // Check to see if it begins in a slash
-        if(substr($path, 0) != '/') {
-            $path = '/' . $path;
-        }
-
-        // Check to see if it ends in a slash
-        if(substr($path, -1) != '/') {
-            $path .= '/';
-        }
+        $path = $this->cleanPath($path);
 
         // Add the project base to the path
         $path = static::$app['path.base'].$path;
@@ -113,7 +148,22 @@ class CabinetUpload extends Ardent
         $this->dateFolderPath = str_replace('-','/',$date->toDateString()) . '/';
 
         // Parse in to a folder format. 2013:03:30 -> 2013/03/30/{filename}.jpg
-        return $path . $this->dateFolderPath;
+        $folder = $path . $this->dateFolderPath;
+
+        // Check to see if the upload folder exists
+        if (! File::exists($folder)) {
+            // Try and create it
+            if (! File::makeDirectory($folder, static::$app['config']->get('cabinet::upload_folder_permission_value'), true)) {
+                throw new FileException('Directory is not writable. Please make upload folder writable.');
+            }
+        }
+
+        // Check that the folder is writable
+        if (! File::isWritable($folder)) {
+            throw new FileException('Folder is not writable.');
+        }
+
+        return $folder;
     }
 
     /**
@@ -139,9 +189,7 @@ class CabinetUpload extends Ardent
             $i = '0000';
 
             // Get the file bits
-            $basename = basename($file->fileSystemName, $file->getClientOriginalExtension());
-            // Remove trailing period
-            $basename = (substr($basename, -1) == '.' ? substr($basename,0,strlen($basename)-1) : $basename);
+            $basename = $this->getBasename($file);
             $basenamePieces = explode('_', $basename);
 
             // If there's more than one piece then let see if it's our counter.
@@ -187,4 +235,97 @@ class CabinetUpload extends Ardent
         }
     }
 
+    /**
+     * Checks the upload vs the upload types in the config.
+     * @param \Symfony\Component\HttpFoundation\File\UploadedFile $file
+     * @return bool
+     */
+    public function verifyImageType($file)
+    {
+        if (in_array($file->getMimeType() , static::$app['config']->get('cabinet::image_file_types')) ||
+            in_array(strtolower($file->getClientOriginalExtension()), static::$app['config']->get('cabinet::image_file_extensions'))) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function getBasename($file)
+    {
+        // Get the file bits
+        $basename = basename((isset($file->fileSystemName) ? $file->fileSystemName : $file->getClientOriginalName()), $file->getClientOriginalExtension());
+        // Remove trailing period
+        return (substr($basename, -1) == '.' ? substr($basename,0,strlen($basename)-1) : $basename);
+    }
+
+    public function generateThumbnails($folder, $file)
+    {
+        $folder = static::$app['path.base'] . $folder;
+
+        if( is_string($file) ) {
+            $file = new UploadedFile($folder.$file, $file);
+        }
+
+        $thumbnails = array();
+
+        // Check the image type is valid by extension and mimetype
+        if($this->verifyImageType($file)) {
+            $image = Image::make($folder . $file->getClientOriginalName());
+
+            foreach(static::$app['config']->get('cabinet::image_resize') as $image_params) {
+
+                $tempFile = clone $file;
+
+                // Add image manipulation to file name.
+                $tempFile->fileSystemName = $this->getBasename($file) . '_' .
+                    ($image_params[0]!=null?$image_params[0]:'auto') .
+                    'x' .
+                    ($image_params[1]!=null?$image_params[1]:'auto') .
+                    (isset($image_params[2])&&$image_params[2]==true?'_ratio':'') .
+                    (isset($image_params[3])&&$image_params[3]==true?'_upsized':'') .
+                    '.' . $file->getClientOriginalExtension();
+
+                list($folder, $tempFile) = $this->resolveFileName($folder, $tempFile);
+
+                // Have to clone since we'll be doing this multiple times.
+                $clonedImage = clone $image;
+                if(! isset($image_params[2])) {
+                    $image_params[2] = false;
+                }
+                if(! isset($image_params[3])) {
+                    $image_params[3] = true;
+                }
+
+                $clonedImage->resize(
+                    $image_params[0],
+                    $image_params[1],
+                    $image_params[2],
+                    $image_params[3]
+                )->save($folder . $tempFile->fileSystemName);
+
+                $thumbnails[] = $tempFile;
+
+                // Image files can be big, free up memory.
+                unset($clonedImage);
+                unset($tempFile);
+            }
+        }
+
+        return $thumbnails;
+    }
+
+    public function cleanPath($path)
+    {
+        // Check to see if it begins in a slash
+        if(substr($path, 0) != '/') {
+            $path = '/' . $path;
+        }
+
+        // Check to see if it ends in a slash
+        if(substr($path, -1) != '/') {
+            $path .= '/';
+        }
+
+        return $path;
+    }
 }
