@@ -21,7 +21,7 @@
         "symfony/http-kernel": "2.3.*",
         "nesbot/carbon": "1.*",
         "bllim/datatables": "*",
-        "intervention/image": "dev-master"
+        "intervention/image": "1.4.1"
 },
     "suggest": {
         "zizaco/confide":"add Easy User management to Laravel 4",
