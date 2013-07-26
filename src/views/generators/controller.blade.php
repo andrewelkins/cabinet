@@ -34,24 +34,13 @@ class {{ $name }} extends BaseController {
         ${{ lcfirst(Config::get('cabinet::upload_model')) }} = new {{ Config::get('cabinet::upload_model') }};
 
         try {
-            list(${{ lcfirst(Config::get('cabinet::upload_model')) }}->filename, ${{ lcfirst(Config::get('cabinet::upload_model')) }}->path) = ${{ lcfirst(Config::get('cabinet::upload_model')) }}->upload($file);
+            ${{ lcfirst(Config::get('cabinet::upload_model')) }}->process($file);
         } catch(Exception $exception){
             // Something went wrong. Log it.
             Log::error($exception);
             // Return error
             return Response::json($exception->getMessage(), 400);
         }
-
-        // File extension
-        ${{ lcfirst(Config::get('cabinet::upload_model')) }}->extension = $file->getClientOriginalExtension();
-        // Mimetype for the file
-        ${{ lcfirst(Config::get('cabinet::upload_model')) }}->mimetype = $file->getMimeType();
-        // Current user or 0
-        ${{ lcfirst(Config::get('cabinet::upload_model')) }}->user_id = (Auth::user() ? Auth::user()->id : 0);
-
-        ${{ lcfirst(Config::get('cabinet::upload_model')) }}->size = $file->getSize();
-
-        ${{ lcfirst(Config::get('cabinet::upload_model')) }}->save();
 
         // If it now has an id, it should have been successful.
         if ( ${{ lcfirst(Config::get('cabinet::upload_model')) }}->id ) {
@@ -77,7 +66,7 @@ class {{ $name }} extends BaseController {
         return Datatables::of($uploads)
             ->remove_column('id')
             ->remove_column('user_id')
-            ->remove_column('parent_id')
+            ->edit_column('username', '<a href="{{ '{'.'{ URL::to(\\\'admin/users/\\\'.$id.\\\'/edit\\\')}'.'}' }}">{{ '{'.'{$username}'.'}' }}</a>')
             ->make();
     }
 
