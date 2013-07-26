@@ -48,8 +48,6 @@ class CabinetUpload extends Eloquent
     
     public function process(UploadedFile $file)
     {
-        list($this->path, $this->filename) = $this->upload($file);
-
         // File extension
         $this->extension = $file->getClientOriginalExtension();
         // Mimetype for the file
@@ -59,11 +57,13 @@ class CabinetUpload extends Eloquent
 
         $this->size = $file->getSize();
 
+        list($this->path, $this->filename) = $this->upload($file);
+
         $this->save();
 
         // Check to see if image thumbnail generation is enabled
         if(static::$app['config']->get('cabinet::image_manipulation')) {
-            $thumbnails = $this->generateThumbnails($this->path, $file);
+            $thumbnails = $this->generateThumbnails($this->path, $this->filename);
             $uploads = array();
             foreach($thumbnails as $thumbnail) {
                 $upload = new $this;
@@ -72,9 +72,9 @@ class CabinetUpload extends Eloquent
 
                 $upload->path = static::$app['config']->get('cabinet::upload_folder_public_path').$this->dateFolderPath.$thumbnail->fileSystemName;
                 // File extension
-                $upload->extension = $this->getClientOriginalExtension();
+                $upload->extension = $thumbnail->getClientOriginalExtension();
                 // Mimetype for the file
-                $upload->mimetype = $this->getMimeType();
+                $upload->mimetype = $thumbnail->getMimeType();
                 // Current user or 0
                 $upload->user_id = $this->user_id;
 
@@ -98,7 +98,7 @@ class CabinetUpload extends Eloquent
      * @throws \Symfony\Component\HttpFoundation\File\Exception\FileException
      * @return array
      */
-    public function upload(UploadedFile $file)
+    public function upload(UploadedFile &$file)
     {
         // Check the upload type is valid by extension and mimetype
         $this->verifyUploadType($file);
@@ -114,10 +114,8 @@ class CabinetUpload extends Eloquent
         // Check to see if file exists already. If so append a random string.
         list($folder, $file) = $this->resolveFileName($folder, $file);
 
-        // Upload the file to the folder
-        if(! $file->move($folder, $file->fileSystemName)) {
-            throw new FileException('Upload failed.');
-        }
+        // Upload the file to the folder. Exception thrown from move.
+        $file->move($folder, $file->fileSystemName);
 
         // If it returns an array it's a successful upload. Otherwise an exception will be thrown.
         return array($this->cleanPath(static::$app['config']->get('cabinet::upload_folder')).$this->dateFolderPath, $file->fileSystemName);
@@ -152,7 +150,6 @@ class CabinetUpload extends Eloquent
         // Parse in to a folder format. 2013:03:30 -> 2013/03/30/{filename}.jpg
         $folder = $path . $this->dateFolderPath;
 
-        Log::error($folder);
         // Check to see if the upload folder exists
         if (! File::exists($folder)) {
             // Try and create it
@@ -243,7 +240,7 @@ class CabinetUpload extends Eloquent
      * @param \Symfony\Component\HttpFoundation\File\UploadedFile $file
      * @return bool
      */
-    public function verifyImageType(UploadedFile $file)
+    public function verifyImageType($file)
     {
         if (in_array($file->getMimeType() , static::$app['config']->get('cabinet::image_file_types')) ||
             in_array(strtolower($file->getClientOriginalExtension()), static::$app['config']->get('cabinet::image_file_extensions'))) {
@@ -253,32 +250,41 @@ class CabinetUpload extends Eloquent
         }
     }
 
-    public function getBasename(UploadedFile $file)
+    public function getBasename($file)
     {
         // Get the file bits
-        $basename = basename($file->fileSystemName, $file->getClientOriginalExtension());
+        $basename = basename((isset($file->fileSystemName) ? $file->fileSystemName : $file->getClientOriginalName()), $file->getClientOriginalExtension());
         // Remove trailing period
         return (substr($basename, -1) == '.' ? substr($basename,0,strlen($basename)-1) : $basename);
     }
 
     public function generateThumbnails($folder, $file)
     {
+        $folder = static::$app['path.base'] . $folder;
+
+        if( is_string($file) ) {
+            $file = new UploadedFile($folder.$file, $file);
+        }
+
         $thumbnails = array();
 
         // Check the image type is valid by extension and mimetype
         if($this->verifyImageType($file)) {
-
-            $folder = static::$app['path.base'] . $folder;
-
-            $image = Image::make($folder . $file->fileSystemName);
+            $image = Image::make($folder . $file->getClientOriginalName());
 
             foreach(static::$app['config']->get('cabinet::image_resize') as $image_params) {
 
                 $tempFile = clone $file;
 
                 // Add image manipulation to file name.
-                $tempFile->fileSystemName = $this->getBasename($file) . '_' . ($image_params[0]!=null?:'auto') . 'x' . ($image_params[1]!=null?:'auto') . '.' . $file->getClientOriginalExtension();
-                
+                $tempFile->fileSystemName = $this->getBasename($file) . '_' .
+                    ($image_params[0]!=null?$image_params[0]:'auto') .
+                    'x' .
+                    ($image_params[1]!=null?$image_params[1]:'auto') .
+                    (isset($image_params[2])&&$image_params[2]==true?'_ratio':'') .
+                    (isset($image_params[3])&&$image_params[3]==true?'_upsized':'') .
+                    '.' . $file->getClientOriginalExtension();
+
                 list($folder, $tempFile) = $this->resolveFileName($folder, $tempFile);
 
                 // Have to clone since we'll be doing this multiple times.
@@ -297,7 +303,7 @@ class CabinetUpload extends Eloquent
                     $image_params[3]
                 )->save($folder . $tempFile->fileSystemName);
 
-                $thumbnails[] = new UploadedFile($folder . $tempFile->fileSystemName, $tempFile->fileSystemName);
+                $thumbnails[] = $tempFile;
 
                 // Image files can be big, free up memory.
                 unset($clonedImage);
