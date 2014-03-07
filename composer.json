@@ -11,17 +11,17 @@
     ],
     "require": {
         "php": ">=5.3.0",
-        "illuminate/auth": "4.0.x",
-        "illuminate/database": "4.0.x",
-        "illuminate/filesystem": "4.0.x",
-        "illuminate/log": "4.0.x",
-        "illuminate/support": "4.0.x",
-        "illuminate/view": "4.0.x",
-        "symfony/http-foundation": "2.3.*",
-        "symfony/http-kernel": "2.3.*",
+        "illuminate/auth": "4.1.x",
+        "illuminate/database": "4.1.x",
+        "illuminate/filesystem": "4.1.x",
+        "illuminate/log": "4.1.x",
+        "illuminate/support": "4.1.x",
+        "illuminate/view": "4.1.x",
+        "symfony/http-foundation": "2.4.*",
+        "symfony/http-kernel": "2.4.*",
         "nesbot/carbon": "1.*",
         "bllim/datatables": "*",
-        "intervention/image": "1.4.1"
+        "intervention/image": "1.5.2"
 },
     "suggest": {
         "zizaco/confide":"add Easy User management to Laravel 4",
