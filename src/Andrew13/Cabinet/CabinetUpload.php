@@ -180,11 +180,13 @@ class CabinetUpload extends Eloquent
         }
 
         if(static::$app['config']->get('cabinet::obfuscate_filenames') && $enableObfuscation) {
-            $file = basename($file->fileSystemName, $file->getClientOriginalExtension()) . '_' . md5( uniqid(mt_rand(), true) ) . '.' . $file->getClientOriginalExtension();
-        }
+            $fileName = basename($file->fileSystemName, $file->getClientOriginalExtension()) . '_' . md5( uniqid(mt_rand(), true) ) . '.' . $file->getClientOriginalExtension();
+        } else {
+	    $fileName = $file->fileSystemName;
+	}
 
         // If file exists append string and try again.
-        if (File::isFile($folder.$file->fileSystemName)) {
+        if (File::isFile($folder.$fileName)) {
             // Default file postfix
             $i = '0000';
 
