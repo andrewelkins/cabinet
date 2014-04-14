@@ -181,8 +181,10 @@ class CabinetUpload extends Eloquent
 
         if(static::$app['config']->get('cabinet::obfuscate_filenames') && $enableObfuscation) {
             $fileName = basename($file->fileSystemName, $file->getClientOriginalExtension()) . '_' . md5( uniqid(mt_rand(), true) ) . '.' . $file->getClientOriginalExtension();
+            $file->fileSystemName = $fileName;
         } else {
-	    $fileName = $file->fileSystemName;
+            $fileName = $file->fileSystemName;
+        }
 	}
 
         // If file exists append string and try again.
