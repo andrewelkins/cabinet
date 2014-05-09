@@ -14,8 +14,6 @@ class CabinetUpload extends Eloquent
 {
     public static $app;
 
-    protected $dateFolderPath;
-
     /**
      * Get the uploads owner.
      *
@@ -70,7 +68,7 @@ class CabinetUpload extends Eloquent
 
                 $upload->filename = $thumbnail->fileSystemName;
 
-                $upload->path = static::$app['config']->get('cabinet::upload_folder_public_path').$this->dateFolderPath.$thumbnail->fileSystemName;
+                $upload->path = static::$app['config']->get('cabinet::upload_folder_public_path').$thumbnail->fileSystemName;
                 // File extension
                 $upload->extension = $thumbnail->getClientOriginalExtension();
                 // Mimetype for the file
@@ -118,7 +116,7 @@ class CabinetUpload extends Eloquent
         $file->move($folder, $file->fileSystemName);
 
         // If it returns an array it's a successful upload. Otherwise an exception will be thrown.
-        return array($this->cleanPath(static::$app['config']->get('cabinet::upload_folder')).$this->dateFolderPath, $file->fileSystemName);
+        return array($this->cleanPath(static::$app['config']->get('cabinet::upload_folder')), $file->fileSystemName);
     }
 
     /**
@@ -145,10 +143,7 @@ class CabinetUpload extends Eloquent
         // Add the project base to the path
         $path = static::$app['path.base'].$path;
 
-        $this->dateFolderPath = str_replace('-','/',$date->toDateString()) . '/';
-
-        // Parse in to a folder format. 2013:03:30 -> 2013/03/30/{filename}.jpg
-        $folder = $path . $this->dateFolderPath;
+        $folder = $path;
 
         // Check to see if the upload folder exists
         if (! File::exists($folder)) {
