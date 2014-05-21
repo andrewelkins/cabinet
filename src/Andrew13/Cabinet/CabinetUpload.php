@@ -44,7 +44,7 @@ class CabinetUpload extends Eloquent
             static::$app = app();
     }
     
-    public function process(UploadedFile $file)
+    public function process(UploadedFile $file, $private = false)
     {
         // File extension
         $this->extension = $file->getClientOriginalExtension();
@@ -55,20 +55,28 @@ class CabinetUpload extends Eloquent
 
         $this->size = $file->getSize();
 
-        list($this->path, $this->filename) = $this->upload($file);
+        list($this->path, $this->filename) = $this->upload($file, $private);
 
         $this->save();
 
         // Check to see if image thumbnail generation is enabled
         if(static::$app['config']->get('cabinet::image_manipulation')) {
             $thumbnails = $this->generateThumbnails($this->path, $this->filename);
+
+            // get upload folder private/public path
+            if($private){
+                $path = static::$app['config']->get('cabinet::private_upload_folder_private_path');
+            } else {
+                $path = static::$app['config']->get('cabinet::upload_folder_public_path');
+            }
+
             $uploads = array();
             foreach($thumbnails as $thumbnail) {
                 $upload = new $this;
 
                 $upload->filename = $thumbnail->fileSystemName;
 
-                $upload->path = static::$app['config']->get('cabinet::upload_folder_public_path').$thumbnail->fileSystemName;
+                $upload->path = $path.$thumbnail->fileSystemName;
                 // File extension
                 $upload->extension = $thumbnail->getClientOriginalExtension();
                 // Mimetype for the file
@@ -96,13 +104,13 @@ class CabinetUpload extends Eloquent
      * @throws \Symfony\Component\HttpFoundation\File\Exception\FileException
      * @return array
      */
-    public function upload(UploadedFile &$file)
+    public function upload(UploadedFile &$file, $private = false)
     {
         // Check the upload type is valid by extension and mimetype
         $this->verifyUploadType($file);
 
         // Get the folder for uploads
-        $folder = $this->getUploadFolder();
+        $folder = $this->getUploadFolder(null, $private);
 
         // Check file size
         if ($file->getSize() > static::$app['config']->get('cabinet::max_upload_file_size')) {
@@ -115,8 +123,13 @@ class CabinetUpload extends Eloquent
         // Upload the file to the folder. Exception thrown from move.
         $file->move($folder, $file->fileSystemName);
 
+        if($private){
+            $folder = static::$app['config']->get('cabinet::private_upload_folder');
+        } else {
+            $folder = static::$app['config']->get('cabinet::upload_folder');
+        }
         // If it returns an array it's a successful upload. Otherwise an exception will be thrown.
-        return array($this->cleanPath(static::$app['config']->get('cabinet::upload_folder')), $file->fileSystemName);
+        return array($this->cleanPath($folder), $file->fileSystemName);
     }
 
     /**
@@ -126,7 +139,7 @@ class CabinetUpload extends Eloquent
      * @throws \Doctrine\Common\Proxy\Exception\InvalidArgumentException
      * @return string
      */
-    public function getUploadFolder($date=null)
+    public function getUploadFolder($date=null, $private = false)
     {
         // Check that a date was given
         if (is_null($date)) {
@@ -136,19 +149,31 @@ class CabinetUpload extends Eloquent
         }
 
         // Get the configuration value for the upload path
-        $path = static::$app['config']->get('cabinet::upload_folder');
+        if($private){
+            $path = static::$app['config']->get('cabinet::private_upload_folder');
+        } else {
+            $path = static::$app['config']->get('cabinet::upload_folder');
+        }
 
         $path = $this->cleanPath($path);
 
         // Add the project base to the path
         $path = static::$app['path.base'].$path;
 
+        // Parse in to a folder format. 2013:03:30 -> 2013/03/30/{filename}.jpg
         $folder = $path;
+
+        // get permission value
+        if($private){
+            $permission = static::$app['config']->get('cabinet::private_upload_folder_permission_value');
+        } else {
+            $permission = static::$app['config']->get('cabinet::upload_folder_permission_value');
+        }
 
         // Check to see if the upload folder exists
         if (! File::exists($folder)) {
             // Try and create it
-            if (! File::makeDirectory($folder, static::$app['config']->get('cabinet::upload_folder_permission_value'), true)) {
+            if (! File::makeDirectory($folder, $permission, true)) {
                 throw new FileException('Directory is not writable. Please make upload folder writable.');
             }
         }
@@ -178,9 +203,8 @@ class CabinetUpload extends Eloquent
             $fileName = basename($file->fileSystemName, $file->getClientOriginalExtension()) . '_' . md5( uniqid(mt_rand(), true) ) . '.' . $file->getClientOriginalExtension();
             $file->fileSystemName = $fileName;
         } else {
-            $fileName = $file->fileSystemName;
-        }
-	}
+	        $fileName = $file->fileSystemName;
+	    }
 
         // If file exists append string and try again.
         if (File::isFile($folder.$fileName)) {
