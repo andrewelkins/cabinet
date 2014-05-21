@@ -56,6 +56,25 @@ return array(
     'upload_folder_public_path' => 'packages/andrew13/cabinet/uploads/',
     'upload_folder_permission_value' => 0777, // Default 0777 - Other likely values 0775, 0755
 
+    /*
+    |--------------------------------------------------------------------------
+    | Private Upload Folder
+    |--------------------------------------------------------------------------
+    |
+    | Folder the Uploader will use.
+    | This will need to writable by the web server.
+    | Default : app/storage/packages/andrew13/cabinet/uploads/
+    | Recommendation: app/storage/private/uploads/
+    |
+    | Route/views example: http://www.sitepoint.com/selling-downloads-stripe-laravel/
+    | Route/views example: http://creative-punch.net/2014/01/manipulating-serving-images-fly-laravel-part-2/
+    | Route/views example: http://stackoverflow.com/questions/20415444/download-files-in-laravel-using-responsedownload
+    |
+    */
+
+    'private_upload_folder' => 'app/storage/packages/andrew13/cabinet/uploads/',
+    'private_upload_folder_private_path' => 'app/storage/private/uploads/', //you will need to create a route (see examples above)
+    'private_upload_folder_permission_value' => 0777, // Default 0777 - Other likely values 0775, 0755
 
     /*
     |--------------------------------------------------------------------------
