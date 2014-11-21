@@ -1,5 +1,4 @@
-{{ '<?php' }}
-
+<?php echo "<?php";?>
 
 use Illuminate\Database\Migrations\Migration;
 
