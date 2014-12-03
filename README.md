@@ -23,7 +23,9 @@ In the `require` key of `composer.json` file add the following:
 
 For use with Laravel 4.1.x
 
-    "andrewelkins/cabinet": "1.0.x"
+```json
+"andrewelkins/cabinet": "1.0.x"
+```
 
 For use with Laravel 4.2.x
 
