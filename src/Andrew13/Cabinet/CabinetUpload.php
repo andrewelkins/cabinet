@@ -185,7 +185,6 @@ class CabinetUpload extends Eloquent
         } else {
             $fileName = $file->fileSystemName;
         }
-	}
 
         // If file exists append string and try again.
         if (File::isFile($folder.$fileName)) {
