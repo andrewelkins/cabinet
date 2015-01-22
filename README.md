@@ -118,7 +118,7 @@ $ composer dump-autoload
 In order to use the js/css/images you'll need to publish the assets.
 
 ```bash
-$ php artisan asset:publish andrew13/cabinet
+$ php artisan asset:publish andrewelkins/cabinet
 ```
 
 **And you are ready to go.**
@@ -149,10 +149,10 @@ $ php artisan confide:routes --controller Uploader
 First, publish the config files:
 
 ```bash
-$ php artisan config:publish andrew13/cabinet
+$ php artisan config:publish andrewelkins/cabinet
 ```
 
-Then edit the view names in `app/config/packages/andrew13/confide/config.php`.
+Then edit the view names in `app/config/packages/andrewelkins/confide/config.php`.
 
 Further, you can change the location of the uploads, type of upload files, and many more options!
 
