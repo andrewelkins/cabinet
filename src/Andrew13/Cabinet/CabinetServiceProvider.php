@@ -18,7 +18,7 @@ class CabinetServiceProvider extends ServiceProvider {
      */
     public function boot()
     {
-        $this->package('andrew13/cabinet');
+        $this->package('andrewelkins/cabinet');
     }
 
 	/**

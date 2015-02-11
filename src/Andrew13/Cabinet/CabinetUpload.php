@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Intervention\Image\Image;
+use Intervention\Image\ImageManagerStatic as Image;
 
 class CabinetUpload extends Eloquent
 {
@@ -302,8 +302,14 @@ class CabinetUpload extends Eloquent
                 $clonedImage->resize(
                     $image_params[0],
                     $image_params[1],
-                    $image_params[2],
-                    $image_params[3]
+                    function($constraint) use ($image_params){
+                        if($image_params[2]){
+                            $constraint->aspectRatio();
+                        }
+                        if($image_params[3]){
+                            $constraint->upsize();
+                        }
+                    }
                 )->save($folder . $tempFile->fileSystemName);
 
                 $thumbnails[] = $tempFile;
